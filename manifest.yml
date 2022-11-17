@@ -8,7 +8,7 @@ applications:
   env:
     CORS_DOMAIN: "cfapps.eu10.hana.ondemand.com"
     JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jdk.SAPMachineJDK']"
-    JBP_CONFIG_SAP_MACHINE_JRE: '{ jre: { version: "11.+" } }'    
+    JBP_CONFIG_SAP_MACHINE_JRE: '{ jre: { version: "11.+" } }'
   services:
     - espm-hana-db
     - espm-xsuaa

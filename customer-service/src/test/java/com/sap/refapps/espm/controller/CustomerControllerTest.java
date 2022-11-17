@@ -58,6 +58,7 @@ public class CustomerControllerTest {
 	private final String LOCATION = "location";
 	private final String CUSTOMER_ID = "1000000001";
 	private final String INVALID_CUSTOMER_ID = "1990000001";
+	private final String CUSTOMER_URL = CustomerController.API + CustomerController.API_CUSTOMER;
 	private final String CUSTOMER_URL_VALID = CustomerController.API
 			+ CustomerController.API_CUSTOMER + EMAIL_ADDRESS;
 	private final String CUSTOMER_URL_INVALID = CustomerController.API
@@ -66,6 +67,10 @@ public class CustomerControllerTest {
 			+ CustomerController.API_CART;
 	private final String INVALID_CUSTOMER_CART_URL = CustomerController.API + CustomerController.API_CUSTOMER
 			+ INVALID_CUSTOMER_ID + CustomerController.API_CART;
+	
+	private static final String POST_CUSTOMER_JSON_PAYLOAD = "{\"emailAddress\": \"new_customer@test.com\", \"phoneNumber\": \"0123456789\", \"firstName\": \"new\", "
+			+ "\"lastName\": \"customer\", \"dateOfBirth\": \"19900911\", \"city\": \"Bang, KR\", \"postalCode\": \"112233\", \"street\": \"100ft Road\", "
+			+"\"houseNumber\": \"123\", \"country\": \"IN\"}";
 
 	private static final String CUSTOMER_JSON = "{\"customerId\":\"1000000001\",\"emailAddress\":\"viola.gains@itelo1.info\","
 			+ "\"phoneNumber\":\"1029384756\",\"firstName\":\"Viola\",\"lastName\":\"Gains\",\"dateOfBirth\":\"19801231\","
@@ -74,6 +79,20 @@ public class CustomerControllerTest {
 	@BeforeEach
 	public void create() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+	}
+	
+	/**
+	 * It is used to test the addCustomer()
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testAddCustomer() throws Exception {
+		requestBuilder = buildPostRequest(CUSTOMER_URL);
+		mockMvc.perform(requestBuilder
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(POST_CUSTOMER_JSON_PAYLOAD))
+        		.andExpect(status().isCreated());
 	}
 
 	/**

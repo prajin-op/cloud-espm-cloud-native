@@ -19,13 +19,13 @@ sap.ui.define([
             this.byId("productListPage").setModel(productsModel, "products");
             var oRouter = UIComponent.getRouterFor(this);
             oRouter
-                .getRoute("Product")
-                .attachPatternMatched(this._onObjectMatched, this);
+            .getRoute("Product")
+            .attachPatternMatched(this._onObjectMatched, this);
         },
         _onObjectMatched: function (oEvent) {
             countvar = this.getOwnerComponent().getModel("customer").getData().carts.count;
             this.getView().byId("btnProductListHeader").setText(countvar);
-        },
+          },
         onAfterRendering: function () {
 
         },
@@ -84,8 +84,8 @@ sap.ui.define([
         },
 
         onNavBack: function () {
-            window.history.go(-1);
-        },
+			window.history.go(-1);
+		},
 
         onOrdersButtonPressed: function () {
             var ctrl = this.getView().byId("txtEmailAddress");

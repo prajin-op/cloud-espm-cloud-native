@@ -1,6 +1,6 @@
 _schema-version: "2.0.0"
 ID: cloud-espm-cloud-native-tax
-version: 1.2.0
+version: 1.3.0
 parameters:
   enable-parallel-deployments: true
 
@@ -12,7 +12,6 @@ modules:
       builder: maven
       build-result: "target/tax-service.jar"
       timeout: 60m
-      buildpack: https://github.com/cloudfoundry/java-buildpack.git
     properties:
       TARGET_RUNTIME: tomcat
       SPRING_PROFILES_DEFAULT: cf

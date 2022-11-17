@@ -126,7 +126,7 @@ The focus of this pattern is on the design of the failure unit. A failure unit i
 
 Before running ESPM application one would need
 
-* Java 11
+* JAVA 11
 * [Apache Maven](https://maven.apache.org/)
 * To build the multi target application, we need the [Cloud MTA Build tool](https://sap.github.io/cloud-mta-build-tool/), download the tool from [here](https://sap.github.io/cloud-mta-build-tool/download/)
 * For Windows system, install 'MAKE' from https://sap.github.io/cloud-mta-build-tool/makefile/
@@ -149,7 +149,7 @@ For Running locally:
 
 * Download Qpid Broker-J 8.0 from [its repository](https://qpid.apache.org/releases/qpid-broker-j-8.0.6/)
 
->Note: Qpid Broker-J 7.0 is incompatible with JDK 11.  
+>Note: Qpid Broker-J 7.0 is incompatible with JDK 11.`  
 * Extract the zip and navigate to the bin directory
 * To run Qpid server
      - Windows - Run the qpid-server.bat
@@ -157,9 +157,10 @@ For Running locally:
 
 * On the first run a qpid-broker a default config.json will be generated in your user directory
   * On windows C:\users\<username>\Appdata\roaming\Qpid\config.json
-
->Note: If you're facing issues in starting the qpid server, please delete the already existing Qpid\config.json file and then restart the server again.
   * On Linux/Mac /Users/<username>/config.json
+	
+>Note: If you're facing issues in starting the qpid server, please delete the already existing Qpid\config.json file and then re-start the server again.
+		
 * add the property "secureOnlyMechanisms": [], in the config.json file to disable SSL, as indicated in [sample file](https://github.com/SAP-samples/cloud-espm-cloud-native/blob/master/documentation/config.json#L9). Please do not use the sample file but update your own config.json file with this property.
 * Stop Qpid server and start it again
 * The default Qpid user is <b>guest</b> and password is also <b>guest</b>
@@ -480,7 +481,7 @@ The ESPM application has a dependency to Tax Service Application which is a mock
 
 ### Security Implementation
 
-The security implementation in the ESPM application is based on [Spring Security](https://spring.io/projects/spring-security-oauth). Spring applications using the Spring-security libraries can integrate with the SAPBusiness Technology Platform Authorization and Trust Management service as described [here](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/be97ec4a799c4135884c62610fea2a8f.html). ESPM Application implements app-to-app communication so that two microservices can securely communicate with each other. This application showcases how to implement a secure communication using two  different ways:
+The security implementation in the ESPM application is based on [Spring Security](https://spring.io/projects/spring-security-oauth). Spring applications using the Spring-security libraries can integrate with the SAPBusiness Technology Platform Authorization and Trust Management service as described [here](https://help.sap.com/docs/SAP_HANA_PLATFORM/4505d0bdaf4948449b7f7379d24d0f0d/cc45f1833e364d348b5057a60d0b8aed.html#configure-spring-security-for-spring-boot-applications%0A(spring-xsuaa)). ESPM Application implements app-to-app communication so that two microservices can securely communicate with each other. This application showcases how to implement a secure communication using two  different ways:
 
 - Propagating a Business User
 - Using a Technical User
@@ -505,7 +506,7 @@ The steps below describe how authentication and authorization is implemented in 
 
 As a pre prerequisite, the sale-service and product-service should be bound to same xsuaa instance.
 
- 1. Add the [application security descriptor](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/150b04d647cd4b42835411c1787a8b11.html) file (xs-security.json) to the project.
+ 1. Add the [application security descriptor](https://help.sap.com/docs/CP_AUTHORIZ_TRUST_MNG/42d3f70108eb4439953bfe47f4f90809/381b77b9e77448fd9a2036da1ec39729.html?state=DRAFT&q=application%20security%20descriptor%20file) file (xs-security.json) to the project.
     > This file can be found in the root folder of the project.
  
  2. Define a role **Retailer** within the application security descriptor.
@@ -1062,7 +1063,15 @@ None
 
 ## Support
 
-Please use GitHub [issues](https://github.com/SAP-samples/cloud-espm-cloud-native/issues/new) for any bugs to be reported.
+Please use GitHub [issues](https://github.tools.sap/refapps/cloud-espm-cloud-native/issues) for any bugs to be reported.
+	
+## TODO
+
+JDK11 is incompatible with older version of QPID e.g QPID 7.0.1 which was used earlier in ESPM app. The incompatibiity issue crahses the Worker when deployed locally. So to migrate the ESPM application from jdk8 to jdk11, its indispensable to use a compatible version of QPID e.g QPID 8.0.6 (latest). However you may still face issues in QPID even after upgrading it to latest. 
+	
+Say an older version of QPID(7.x) was installed in your system and you started it in order to run worker locally. This creates a config.json file under `~\users<username>\Appdata\roaming\Qpid\` in windows system (For Mac the path is different). Now when you install a newer version of QPID(8.x) and run it, the qpid broker doest not override the configuration of config.json file and uses the existing content. This causes authentication related issues. The older version of QPID(7.x) uses `PlainPasswordFile` type for authentication whereas the upgraded version of QPID(8.x) uses 'Plain` type for authentication. 
+	
+To fix this problem, first remove the config.json file from `~\users<username>\Appdata\roaming\Qpid\` and then start the qpid server. This will create a fresh config.json file with configuration related to QPID 8.x. Its also important to add `"secureOnlyMechanisms": []` to `"authenticationproviders"` in config.json to avoid authentication issues.
 
 ## License
 
