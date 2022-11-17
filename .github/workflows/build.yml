@@ -8,7 +8,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-deploy:
+  build and deploy:
 
     runs-on: ubuntu-latest
 
@@ -49,8 +49,6 @@ jobs:
         distribution: 'zulu'
     - name: Build with Maven
       run: mvn clean install
-    - name: install qpid
-      run: sudo apt-get install -y qpidd qpid-tools
     - name: espm customer service
       run: |
           cd customer-service
