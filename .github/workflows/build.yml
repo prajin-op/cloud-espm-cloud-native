@@ -8,14 +8,38 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-deploy:
 
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         maven: [ 3.8.5 ]
-
+        database-name:
+        - my-app
+        database-password:
+        - postgres
+        database-user:
+        - postgres
+        database-host:
+        - 127.0.0.1
+        database-port:
+        - 5432
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: ${{ matrix.database-name }}
+          POSTGRES_USER: ${{ matrix.database-user }}
+          POSTGRES_PASSWORD: ${{ matrix.database-password }}
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options:
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5    
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -25,3 +49,23 @@ jobs:
         distribution: 'zulu'
     - name: Build with Maven
       run: mvn clean install
+    - name: install qpid
+      run: sudo apt-get install -y qpidd qpid-tools
+    - name: espm customer service
+      run: |
+          cd customer-service
+          mvn spring-boot:run
+    - name: espm product service
+      run: |
+          cd product-service
+          mvn spring-boot:run  
+    - name: espm worker
+      run: |
+          cd worker
+          mvn spring-boot:run
+    - name: espm tax service
+      run: |
+          cd tax-service
+          mvn spring-boot:run          
+    - name: espm gateway
+      run: mvn clean install -pl gateway
